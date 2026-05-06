@@ -35,6 +35,12 @@ Before defining tasks, map out which files will be created or modified and what 
 
 This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
 
+## Parallelism (Optional)
+
+If two or more tasks touch **completely disjoint files** with **no cross-dependencies**, mark them with the same `**Parallel group:**` label. The executor will dispatch the whole group simultaneously.
+
+Most plans are sequential — only add this when it's obvious. When in doubt, leave it out.
+
 ## Bite-Sized Task Granularity
 
 **Each step is one action (2-5 minutes):**
@@ -67,6 +73,8 @@ This structure informs the task decomposition. Each task should produce self-con
 
 ````markdown
 ### Task N: [Component Name]
+
+**Parallel group:** A *(optional — omit if sequential)*
 
 **Files:**
 - Create: `exact/path/to/file.py`
