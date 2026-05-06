@@ -81,10 +81,10 @@ Skip any step = lying, not verifying
 ❌ "Should pass now" / "Looks correct"
 ```
 
-**Regression tests (TDD Red-Green):**
+**Regression tests (when written):**
 ```
-✅ Write → Run (pass) → Revert fix → Run (MUST FAIL) → Restore → Run (pass)
-❌ "I've written a regression test" (without red-green verification)
+✅ Write test → Run (pass) → Revert fix → Run (MUST FAIL) → Restore fix → Run (pass)
+❌ "I've written a regression test" (without confirming it actually fails when the bug is reintroduced)
 ```
 
 **Build:**

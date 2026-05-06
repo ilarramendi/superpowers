@@ -30,8 +30,8 @@ Task tool (general-purpose):
 
     Once you're clear on requirements:
     1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
-    3. Verify implementation works
+    2. Verify implementation works (manual run, or test if the task says to write one)
+    3. Write tests ONLY if the task explicitly calls for them — see superpowers:pragmatic-testing for the decision framework
     4. Commit your work
     5. Self-review (see below)
     6. Report back
@@ -90,10 +90,10 @@ Task tool (general-purpose):
     - Did I only build what was requested?
     - Did I follow existing patterns in the codebase?
 
-    **Testing:**
-    - Do tests actually verify behavior (not just mock behavior)?
-    - Did I follow TDD if required?
-    - Are tests comprehensive?
+    **Testing / Verification:**
+    - If I wrote tests: do they verify real behavior, not just mock behavior?
+    - If I skipped tests: did I actually run the code and confirm it works?
+    - Are the tests I wrote (if any) focused on what's worth testing?
 
     If you find issues during self-review, fix them now before reporting.
 

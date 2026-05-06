@@ -7,17 +7,17 @@ description: Use when creating new skills, editing existing skills, or verifying
 
 ## Overview
 
-**Writing skills IS Test-Driven Development applied to process documentation.**
+**Writing skills is evidence-based iteration on agent behavior.** Skills are not prose — they shape what agents actually do. The only way to know a skill works is to test it on agents.
 
-**Personal skills live in agent-specific directories (`~/.claude/skills` for Claude Code, `~/.agents/skills/` for Codex)** 
+**Personal skills live in agent-specific directories (`~/.claude/skills` for Claude Code, `~/.agents/skills/` for Codex)**
 
 You write test cases (pressure scenarios with subagents), watch them fail (baseline behavior), write the skill (documentation), watch tests pass (agents comply), and refactor (close loopholes).
 
 **Core principle:** If you didn't watch an agent fail without the skill, you don't know if the skill teaches the right thing.
 
-**REQUIRED BACKGROUND:** You MUST understand superpowers:test-driven-development before using this skill. That skill defines the fundamental RED-GREEN-REFACTOR cycle. This skill adapts TDD to documentation.
+**Why testing is non-negotiable here (even though `pragmatic-testing` says implementation-first elsewhere):** Skill content is behavior-shaping code with no compiler and no obvious feedback loop. Untested skills look fine and silently fail in production. The cost of testing is hours; the cost of not testing is agents misbehaving in every future session. This is one of the cases where tests pay rent unconditionally.
 
-**Official guidance:** For Anthropic's official skill authoring best practices, see anthropic-best-practices.md. This document provides additional patterns and guidelines that complement the TDD-focused approach in this skill.
+**Official guidance:** For Anthropic's official skill authoring best practices, see anthropic-best-practices.md. This document provides additional patterns that complement the iterative approach used here.
 
 ## What is a Skill?
 
@@ -27,22 +27,22 @@ A **skill** is a reference guide for proven techniques, patterns, or tools. Skil
 
 **Skills are NOT:** Narratives about how you solved a problem once
 
-## TDD Mapping for Skills
+## The Skill Iteration Cycle
 
-| TDD Concept | Skill Creation |
-|-------------|----------------|
+| Phase | What it means for skills |
+|-------|--------------------------|
 | **Test case** | Pressure scenario with subagent |
-| **Production code** | Skill document (SKILL.md) |
-| **Test fails (RED)** | Agent violates rule without skill (baseline) |
-| **Test passes (GREEN)** | Agent complies with skill present |
-| **Refactor** | Close loopholes while maintaining compliance |
-| **Write test first** | Run baseline scenario BEFORE writing skill |
-| **Watch it fail** | Document exact rationalizations agent uses |
-| **Minimal code** | Write skill addressing those specific violations |
-| **Watch it pass** | Verify agent now complies |
-| **Refactor cycle** | Find new rationalizations → plug → re-verify |
+| **Production artifact** | Skill document (SKILL.md) |
+| **RED (baseline fails)** | Agent violates the desired rule WITHOUT the skill |
+| **GREEN (skill passes)** | Agent complies WITH the skill present |
+| **REFACTOR** | Close loopholes while maintaining compliance |
+| **Run baseline first** | Always observe what agents naturally do BEFORE writing the skill |
+| **Document failures** | Capture exact rationalizations agents use, verbatim |
+| **Write minimal skill** | Address only those specific observed violations |
+| **Re-test** | Verify agent now complies |
+| **Loop** | Find new rationalizations → plug → re-verify |
 
-The entire skill creation process follows RED-GREEN-REFACTOR.
+The entire skill creation process follows BASELINE → WRITE → REFACTOR.
 
 ## When to Create a Skill
 
@@ -162,7 +162,7 @@ When the description was changed to just "Use when executing implementation plan
 description: Use when executing plans - dispatches subagent per task with code review between tasks
 
 # ❌ BAD: Too much process detail
-description: Use for TDD - write test first, watch it fail, write minimal code, refactor
+description: Use for debugging - read errors, reproduce, form hypothesis, fix, verify
 
 # ✅ GOOD: Just triggering conditions, no workflow summary
 description: Use when executing implementation plans with independent tasks in the current session
@@ -280,10 +280,10 @@ wc -w skills/path/SKILL.md
 **When writing documentation that references other skills:**
 
 Use skill name only, with explicit requirement markers:
-- ✅ Good: `**REQUIRED SUB-SKILL:** Use superpowers:test-driven-development`
+- ✅ Good: `**REQUIRED SUB-SKILL:** Use superpowers:pragmatic-testing`
 - ✅ Good: `**REQUIRED BACKGROUND:** You MUST understand superpowers:systematic-debugging`
-- ❌ Bad: `See skills/testing/test-driven-development` (unclear if required)
-- ❌ Bad: `@skills/testing/test-driven-development/SKILL.md` (force-loads, burns context)
+- ❌ Bad: `See skills/testing/pragmatic-testing` (unclear if required)
+- ❌ Bad: `@skills/testing/pragmatic-testing/SKILL.md` (force-loads, burns context)
 
 **Why no @ links:** `@` syntax force-loads files immediately, consuming 200k+ context before you need them.
 
@@ -371,16 +371,16 @@ pptx/
 ```
 When: Reference material too large for inline
 
-## The Iron Law (Same as TDD)
+## The Iron Law for Skills
 
 ```
-NO SKILL WITHOUT A FAILING TEST FIRST
+NO SKILL WITHOUT A FAILING BASELINE FIRST
 ```
 
 This applies to NEW skills AND EDITS to existing skills.
 
-Write skill before testing? Delete it. Start over.
-Edit skill without testing? Same violation.
+Write a skill before observing baseline behavior? Delete it. Start over.
+Edit a skill without retesting? Same violation.
 
 **No exceptions:**
 - Not for "simple additions"
@@ -390,7 +390,7 @@ Edit skill without testing? Same violation.
 - Don't "adapt" while running tests
 - Delete means delete
 
-**REQUIRED BACKGROUND:** The superpowers:test-driven-development skill explains why this matters. Same principles apply to documentation.
+**Why this is stricter than `pragmatic-testing` elsewhere:** Skill content has no compiler, no runtime errors, no obvious feedback loop. The only way to know it works is to see agents behave correctly under pressure. Skipping the baseline = shipping documentation that may not change behavior at all.
 
 ## Testing All Skill Types
 
@@ -398,7 +398,7 @@ Different skill types need different test approaches:
 
 ### Discipline-Enforcing Skills (rules/requirements)
 
-**Examples:** TDD, verification-before-completion, designing-before-coding
+**Examples:** verification-before-completion, systematic-debugging, designing-before-coding
 
 **Test with:**
 - Academic questions: Do they understand the rules?
@@ -458,7 +458,7 @@ Different skill types need different test approaches:
 
 ## Bulletproofing Skills Against Rationalization
 
-Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
+Skills that enforce discipline (like systematic-debugging or verification-before-completion) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
 
 **Psychology note:** Understanding WHY persuasion techniques work helps you apply them systematically. See persuasion-principles.md for research foundation (Cialdini, 2021; Meincke et al., 2025) on authority, commitment, scarcity, social proof, and unity principles.
 
@@ -519,7 +519,7 @@ Make it easy for agents to self-check when rationalizing:
 - "It's about spirit not ritual"
 - "This is different because..."
 
-**All of these mean: Delete code. Start over with TDD.**
+**All of these mean: Delete the skill content. Start over from baseline observation.**
 ```
 
 ### Update CSO for Violation Symptoms
@@ -530,20 +530,20 @@ Add to description: symptoms of when you're ABOUT to violate the rule:
 description: use when implementing any feature or bugfix, before writing implementation code
 ```
 
-## RED-GREEN-REFACTOR for Skills
+## BASELINE → WRITE → REFACTOR for Skills
 
-Follow the TDD cycle:
+Follow this cycle:
 
-### RED: Write Failing Test (Baseline)
+### BASELINE: Observe Failure Without the Skill
 
 Run pressure scenario with subagent WITHOUT the skill. Document exact behavior:
 - What choices did they make?
 - What rationalizations did they use (verbatim)?
 - Which pressures triggered violations?
 
-This is "watch the test fail" - you must see what agents naturally do before writing the skill.
+You must see what agents naturally do before writing the skill — otherwise you're guessing at what to fix.
 
-### GREEN: Write Minimal Skill
+### WRITE: Minimal Skill
 
 Write skill that addresses those specific rationalizations. Don't add extra content for hypothetical cases.
 
@@ -593,16 +593,16 @@ helper1, helper2, step3, pattern4
 
 Deploying untested skills = deploying untested code. It's a violation of quality standards.
 
-## Skill Creation Checklist (TDD Adapted)
+## Skill Creation Checklist
 
 **IMPORTANT: Use TodoWrite to create todos for EACH checklist item below.**
 
-**RED Phase - Write Failing Test:**
+**BASELINE Phase - Observe Failure:**
 - [ ] Create pressure scenarios (3+ combined pressures for discipline skills)
 - [ ] Run scenarios WITHOUT skill - document baseline behavior verbatim
 - [ ] Identify patterns in rationalizations/failures
 
-**GREEN Phase - Write Minimal Skill:**
+**WRITE Phase - Minimal Skill:**
 - [ ] Name uses only letters, numbers, hyphens (no parentheses/special chars)
 - [ ] YAML frontmatter with required `name` and `description` fields (max 1024 chars; see [spec](https://agentskills.io/specification))
 - [ ] Description starts with "Use when..." and includes specific triggers/symptoms
@@ -646,10 +646,10 @@ How future Claude finds your skill:
 
 ## The Bottom Line
 
-**Creating skills IS TDD for process documentation.**
+**Creating skills is evidence-based iteration on agent behavior.**
 
-Same Iron Law: No skill without failing test first.
-Same cycle: RED (baseline) → GREEN (write skill) → REFACTOR (close loopholes).
-Same benefits: Better quality, fewer surprises, bulletproof results.
+Iron Law: no skill without a failing baseline first.
+Cycle: BASELINE (observe failure) → WRITE (minimal skill) → REFACTOR (close loopholes).
+Benefits: skills that actually change agent behavior, not just documentation that looks reasonable.
 
-If you follow TDD for code, follow it for skills. It's the same discipline applied to documentation.
+Even though `pragmatic-testing` says implementation-first for ordinary code, skills earn the stricter discipline because they have no other feedback loop.

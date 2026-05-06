@@ -81,10 +81,10 @@ Created 4 validation tests following skills/meta/testing-skills-with-subagents:
 - Anti-patterns section
 - Flowchart for "fix failed" decision
 
-### Enhancement 1: TDD Reference
-- Added link to skills/testing/test-driven-development
-- Note explaining TDD's "simplest code" ≠ debugging's "root cause"
-- Prevents confusion between methodologies
+### Enhancement 1: Pragmatic-Testing Reference (no-TDD fork)
+- Added link to skills/pragmatic-testing
+- Note explaining that the Phase 4 failing reproduction is a regression test only when warranted; otherwise a one-off repro script
+- Prevents confusion between debugging-process discipline and test-writing decisions
 
 ## Final Outcome
 
@@ -94,7 +94,7 @@ Bulletproof skill that:
 - ✅ Provides concrete steps for each phase
 - ✅ Shows anti-patterns explicitly
 - ✅ Tested under multiple pressure scenarios
-- ✅ Clarifies relationship to TDD
+- ✅ Clarifies relationship to pragmatic-testing
 - ✅ Ready for use
 
 ## Key Insight

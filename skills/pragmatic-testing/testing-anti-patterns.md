@@ -8,7 +8,7 @@ Tests must verify real behavior, not mock behavior. Mocks are a means to isolate
 
 **Core principle:** Test what the code does, not what the mocks do.
 
-**Following strict TDD prevents these anti-patterns.**
+**Choosing tests deliberately (per `pragmatic-testing`) prevents these anti-patterns from accumulating.**
 
 ## The Iron Laws
 
@@ -234,17 +234,16 @@ BEFORE creating mock responses:
 "Ready for testing"
 ```
 
-**Why this is wrong:**
-- Testing is part of implementation, not optional follow-up
-- TDD would have caught this
-- Can't claim complete without tests
+**Why this is wrong (when a test was warranted):**
+- If `pragmatic-testing` flagged this as needing a test (complex logic, edge case, regression, public API, security), the implementation isn't done without it
+- "Ready for testing" handed off to a human who can't easily verify is just deferred work
+- Verification — manual or automated — must happen before "complete"
 
 **The fix:**
 ```
-TDD cycle:
-1. Write failing test
-2. Implement to pass
-3. Refactor
+1. Decide explicitly: does this need a test? (per pragmatic-testing)
+2. If yes: write a focused test, run it, see it pass
+3. If no: run the code manually, confirm behavior, document what you checked
 4. THEN claim complete
 ```
 
@@ -260,15 +259,15 @@ TDD cycle:
 
 **Consider:** Integration tests with real components often simpler than complex mocks
 
-## TDD Prevents These Anti-Patterns
+## How to Avoid These Anti-Patterns
 
-**Why TDD helps:**
-1. **Write test first** → Forces you to think about what you're actually testing
-2. **Watch it fail** → Confirms test tests real behavior, not mocks
-3. **Minimal implementation** → No test-only methods creep in
-4. **Real dependencies** → You see what the test actually needs before mocking
+**The test you write should be one you'd want to keep:**
+1. **Decide deliberately the test is worth keeping** → forces you to ask what behavior you're actually verifying
+2. **Run it and confirm it fails for the right reason before the fix** → confirms it tests real behavior, not mocks
+3. **Keep mocks minimal — mock only at boundaries** → no test-only methods creep into production code
+4. **Prefer real dependencies when cheap (in-memory DB, local fixtures)** → you see what the code actually depends on before reaching for a mock
 
-**If you're testing mock behavior, you violated TDD** - you added mocks without watching test fail against real code first.
+**If you're testing mock behavior, the test isn't earning its keep** — you've isolated so aggressively that the test no longer says anything about the real system.
 
 ## Quick Reference
 
@@ -278,7 +277,7 @@ TDD cycle:
 | Test-only methods in production | Move to test utilities |
 | Mock without understanding | Understand dependencies first, mock minimally |
 | Incomplete mocks | Mirror real API completely |
-| Tests as afterthought | TDD - tests first |
+| Tests as afterthought | Decide test/no-test deliberately when implementing — not after handoff |
 | Over-complex mocks | Consider integration tests |
 
 ## Red Flags
@@ -294,6 +293,6 @@ TDD cycle:
 
 **Mocks are tools to isolate, not things to test.**
 
-If TDD reveals you're testing mock behavior, you've gone wrong.
+If your test is asserting on mock interactions instead of observable behavior, you've gone wrong.
 
-Fix: Test real behavior or question why you're mocking at all.
+Fix: Test real behavior, or question why you're writing this test at all.

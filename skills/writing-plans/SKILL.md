@@ -7,9 +7,11 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, the code, how to verify it works, and docs they might need to check. Give them the whole plan as bite-sized tasks. DRY. YAGNI. Frequent commits.
 
-Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+**Testing approach:** Write the implementation first. Add tests only when they earn their keep — complex logic, edge cases hard to verify manually, regression prevention for real bugs, public API contracts, security-sensitive code. See `superpowers:pragmatic-testing` for the decision framework. For each task, the plan should specify: write a test, verify manually, or both — and why.
+
+Assume they are a skilled developer, but know almost nothing about our toolset or problem domain.
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
@@ -36,10 +38,11 @@ This structure informs the task decomposition. Each task should produce self-con
 ## Bite-Sized Task Granularity
 
 **Each step is one action (2-5 minutes):**
-- "Write the failing test" - step
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
+- "Implement the function" - step
+- "Run the verification command" - step
+- "Inspect output / behavior" - step
+- (If a test is warranted) "Write a focused test" - step
+- (If a test is warranted) "Run the test and confirm it passes" - step
 - "Commit" - step
 
 ## Plan Document Header
@@ -68,9 +71,24 @@ This structure informs the task decomposition. Each task should produce self-con
 **Files:**
 - Create: `exact/path/to/file.py`
 - Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
+- (Test, only if warranted): `tests/exact/path/to/test.py`
 
-- [ ] **Step 1: Write the failing test**
+**Test decision:** [State explicitly: "Skip — trivial glue, verify by running script" OR "Write test — non-trivial branching logic, hard to verify manually" OR "Regression test — reproduces bug #123"]
+
+- [ ] **Step 1: Implement**
+
+```python
+def function(input):
+    # full implementation
+    return result
+```
+
+- [ ] **Step 2: Verify manually**
+
+Run: `python -m mymodule.cli --input sample.json`
+Expected: prints `{"result": ...}`, exit code 0
+
+- [ ] **Step 3 (only if test warranted): Write the test**
 
 ```python
 def test_specific_behavior():
@@ -78,19 +96,7 @@ def test_specific_behavior():
     assert result == expected
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
-
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
-
-- [ ] **Step 3: Write minimal implementation**
-
-```python
-def function(input):
-    return expected
-```
-
-- [ ] **Step 4: Run test to verify it passes**
+- [ ] **Step 4 (only if test warranted): Run test, confirm pass**
 
 Run: `pytest tests/path/test.py::test_name -v`
 Expected: PASS
@@ -98,7 +104,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add tests/path/test.py src/path/file.py
+git add src/path/file.py tests/path/test.py
 git commit -m "feat: add specific feature"
 ```
 ````
@@ -117,7 +123,8 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - Exact file paths always
 - Complete code in every step — if a step changes code, show the code
 - Exact commands with expected output
-- DRY, YAGNI, TDD, frequent commits
+- DRY, YAGNI, frequent commits
+- Tests only when they earn their keep — see `superpowers:pragmatic-testing`
 
 ## Self-Review
 
